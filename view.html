@@ -1,0 +1,16 @@
+<h1>Гостевая книга</h1>
+<div>
+    Общее количество записей - {{.SignatureCount}}
+    <a href="/guestbook/new">Добавьте вашу запись</a>
+</div>
+
+<form action="">
+    <div><input type="text" name="signature"></div>
+    <div><input type="submit"></div>
+</form>
+
+<div>
+{{range .Signature}}
+    <p>{{.}}</p>
+    {{end}}
+</div>
