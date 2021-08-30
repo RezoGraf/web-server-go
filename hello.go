@@ -2,8 +2,10 @@ package main
 
 import (
 	"007/datafile"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"text/template"
 )
 
@@ -27,7 +29,12 @@ func newHandler(writer http.ResponseWriter, request *http.Request) {
 
 func createHandler(writer http.ResponseWriter, request *http.Request) {
 	signature := request.FormValue("signature")
-	_, err := writer.Write([]byte(signature))
+
+	options := os.O_WRONLY | os.O_APPEND | os.O_CREATE
+	file, err := os.OpenFile("signatures.txt", options, os.FileMode(0600))
+	_, err = fmt.Println(file, signature)
+	check(err)
+	err = file.Close()
 	check(err)
 }
 
@@ -35,8 +42,6 @@ func viewHandler(writer http.ResponseWriter, request *http.Request) {
 	signature, err := datafile.GetStrings("signatures.txt")
 	check(err)
 	html, err := template.ParseFiles("view.html")
-	check(err)
-	err = html.Execute(writer, nil)
 	check(err)
 
 	guestbook := Guestbook{
