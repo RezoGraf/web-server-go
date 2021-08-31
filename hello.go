@@ -29,13 +29,14 @@ func newHandler(writer http.ResponseWriter, request *http.Request) {
 
 func createHandler(writer http.ResponseWriter, request *http.Request) {
 	signature := request.FormValue("signature")
-
 	options := os.O_WRONLY | os.O_APPEND | os.O_CREATE
 	file, err := os.OpenFile("signatures.txt", options, os.FileMode(0600))
-	_, err = fmt.Println(file, signature)
+	check(err)
+	_, err = fmt.Fprintln(file, signature)
 	check(err)
 	err = file.Close()
 	check(err)
+	http.Redirect(writer, request, "/guestbook", http.StatusFound)
 }
 
 func viewHandler(writer http.ResponseWriter, request *http.Request) {
